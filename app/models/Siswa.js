@@ -32,13 +32,13 @@ module.exports = (sequelize, Sequelize) => {
     },
   });
 
-  Siswa.associate = (models) => {
-    // Relasi one-to-one dengan DetailAlamatSiswa
-    Siswa.hasOne(models.detailalamatsiswa, {
-      foreignKey: "id_alamat",
-      as: "detail_alamat_siswa",
-    });
-  };
+  // Siswa.associate = (models) => {
+  //   // Relasi one-to-one dengan DetailAlamatSiswa
+  //   Siswa.hasOne(models.detailalamatsiswa, {
+  //     foreignKey: "id_alamat",
+  //     as: "siswa",
+  //   });
+  // };
 
   return Siswa;
 };

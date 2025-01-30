@@ -28,14 +28,15 @@ db.siswa = require("./Siswa.js")(sequelize, Sequelize);
 db.detailalamatsiswa = require("./detailAlamatSiswa.js")(sequelize, Sequelize);
 
 // siswa ke detail alamat siswa
-db.siswa.hasOne(db.detailalamatsiswa, {
-  foreignKey: "id_alamat",
-  as: "detail_alamat_siswas",
-});
+// db.siswa.hasOne(db.detailalamatsiswa, {
+//   foreignKey: "id_alamat",
+//   as: "detail_alamat_siswas",
+// });
 
 db.detailalamatsiswa.hasOne(db.siswa, {
-  
-})
+  foreignKey: "id_alamat",
+  as: "siswas",
+});
 
 // Paket Model
 // db.paket.hasMany(db.cart_paket, { foreignKey: "id_paket", as: "cart_pakets" });

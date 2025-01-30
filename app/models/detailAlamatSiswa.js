@@ -26,12 +26,12 @@ module.exports = (sequelize, Sequelize) => {
     },
   });
 
-  DetailAlamatSiswa.associate = (models) => {
-    DetailAlamatSiswa.belongsTo(models.siswa, {
-      foreignKey: "id_siswa",
-      as: "siswa",
-    });
-  };
+  // DetailAlamatSiswa.associate = (models) => {
+  //   DetailAlamatSiswa.belongsTo(models.siswa, {
+  //     foreignKey: "id_siswa",
+  //     as: "siswa",
+  //   });
+  // };
 
   return DetailAlamatSiswa;
 };
