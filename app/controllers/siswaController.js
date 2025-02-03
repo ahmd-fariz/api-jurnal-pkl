@@ -209,3 +209,45 @@ exports.update = async (req, res) => {
     });
   }
 };
+
+exports.delete = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    // Cek apakah siswa exists
+    const siswa = await Siswa.findByPk(id);
+    if (!siswa) {
+      return res.status(404).send({
+        message: "Siswa tidak ditemukan",
+      });
+    }
+
+    // Hapus foto siswa jika ada
+    if (siswa.foto_siswa) {
+      const photoPath = `./public/siswa/${siswa.foto_siswa}`;
+      if (fs.existsSync(photoPath)) {
+        fs.unlinkSync(photoPath);
+      }
+    }
+
+    // Hapus detail alamat
+    if (siswa.id_alamat) {
+      await DetailAlamat.destroy({
+        where: { id: siswa.id_alamat },
+      });
+    }
+
+    // Hapus data siswa
+    await Siswa.destroy({
+      where: { id: id },
+    });
+
+    res.status(200).send({
+      message: "Data siswa berhasil dihapus",
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: error.message || "Terjadi kesalahan saat menghapus data siswa",
+    });
+  }
+};
