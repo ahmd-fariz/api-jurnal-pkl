@@ -4,7 +4,7 @@ module.exports = (app) => {
   const upl_fotoSiswa = require("../middleware/fotosiswa");
 
   router.get("/", siswa.findAll);
-  router.post("/", upl_fotoSiswa.array("foto"), siswa.create);
+  router.post("/", upl_fotoSiswa.single("siswa_foto"), siswa.create);
 
   app.use("/api/siswa", router);
 };
