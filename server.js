@@ -37,6 +37,7 @@ require("./app/routes/setting")(app);
 require("./app/routes/administrators")(app);
 require("./app/routes/auth")(app);
 require("./app/routes/backupdb")(app);
+require("./app/routes/siswa")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5000;

@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../models");
 const Administrators = db.administrators; // Menggunakan model Administrators
+const Siswa = db.siswa;
 const { JWT_SECRET } = require("../configs/database"); // Mengimpor nilai JWT_SECRET dari file konfigurasi
 
 exports.login = async (req, res) => {
@@ -84,6 +85,34 @@ exports.cekToken = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: `Internal server error ${error}` });
+  }
+};
+
+exports.authsiswa = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Cari administrator berdasarkan email
+    const siswa = await Siswa.findOne({
+      where: { email: email },
+    });
+
+    // Jika administrator tidak ditemukan atau password salah, kirim respons error
+    if (!siswa || !(await bcrypt.compare(password, siswa.password))) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Buat token JWT
+    const token = jwt.sign({ id: siswa.id }, JWT_SECRET, {
+      // Menggunakan JWT_SECRET sebagai kunci rahasia
+      expiresIn: "1h",
+    });
+
+    // Kirim token sebagai respons
+    res.json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

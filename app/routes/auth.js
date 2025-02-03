@@ -4,6 +4,7 @@ module.exports = (app) => {
   const auth = require("../controllers/authController");
 
   router.post("/login", auth.login);
+  router.post("/loginsiswa", auth.authsiswa);
   router.post("/logout", auth.logout);
   router.get("/cekToken", auth.cekToken);
 
