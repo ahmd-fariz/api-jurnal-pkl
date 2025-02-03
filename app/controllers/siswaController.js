@@ -89,6 +89,50 @@ exports.create = async (req, res) => {
   }
 };
 
+exports.findOne = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const siswa = await Siswa.findByPk(id, {
+      include: [
+        {
+          model: DetailAlamat,
+          as: "detailAlamatSiswa",
+          attributes: [
+            "id",
+            "alamat_lengkap",
+            "kota_kabupaten",
+            "nama_jalan",
+            "rt",
+            "rw",
+            "desa",
+            "kecamatan",
+            "provinsi",
+          ],
+        },
+      ],
+      attributes: {
+        exclude: ["password"], // Tidak menampilkan password dalam response
+      },
+    });
+
+    if (!siswa) {
+      return res.status(404).send({
+        message: "Siswa tidak ditemukan",
+      });
+    }
+
+    res.status(200).send({
+      message: "Data siswa ditemukan",
+      data: siswa,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: error.message || "Terjadi kesalahan saat mengambil data siswa",
+    });
+  }
+};
+
 exports.findAll = async (req, res) => {
   Siswa.findAll({
     include: [
