@@ -7,6 +7,18 @@ const DetailAlamatSiswa = db.detailalamatsiswa;
 // Create
 exports.create = async (req, res) => {
   try {
+    const jurnal = {
+      tanggal_pengisian: new Date(),
+      nama_pekerjaan: req.body.nama_pekerjaan,
+      deskripsi_pekerjaan: req.body.deskripsi_pekerjaan,
+      id_siswa: req.body.id_siswa,
+      nama_perusahaan: req.body.nama_perusahaan,
+      id_pembimbing: req.body.id_pembimbing,
+      pembimbing_perusahaan: req.body.pembimbing_perusahaan,
+    };
+
+    console.log("Request body:", req.body); // Tambahkan ini untuk debug
+
     // Validasi keberadaan siswa dan pembimbing
     const siswa = await Siswa.findByPk(req.body.id_siswa);
     const pembimbing = await Pembimbing.findByPk(req.body.id_pembimbing);
@@ -16,16 +28,6 @@ exports.create = async (req, res) => {
         message: "ID Siswa atau ID Pembimbing tidak valid!",
       });
     }
-
-    const jurnal = {
-      tanggal_pengisian: req.body.tanggal_pengisian,
-      nama_pekerjaan: req.body.nama_pekerjaan,
-      deskripsi_pekerjaan: req.body.deskripsi_pekerjaan,
-      id_siswa: req.body.id_siswa,
-      nama_perusahaan: req.body.nama_perusahaan,
-      id_pembimbing: req.body.id_pembimbing,
-      pembimbing_perusahaan: req.body.pembimbing_perusahaan,
-    };
 
     const data = await Jurnal.create(jurnal);
     res.send({
