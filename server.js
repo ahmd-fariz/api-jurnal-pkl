@@ -41,6 +41,7 @@ require("./app/routes/auth")(app);
 require("./app/routes/backupdb")(app);
 require("./app/routes/siswa")(app);
 require("./app/routes/pembimbing")(app);
+require("./app/routes/jurnal")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5000;
