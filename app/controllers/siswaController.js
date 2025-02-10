@@ -8,15 +8,6 @@ const bcrypt = require("bcryptjs");
 
 exports.create = async (req, res) => {
   try {
-    const { siswa_foto } = req.file;
-
-    // Validasi siswa_foto
-    // if (!siswa_foto || siswa_foto.length === 0) {
-    //   return res.status(400).send({
-    //     message: "Foto siswa harus diupload",
-    //   });
-    // }
-
     // Validate request
     if (!req.body.username || !req.body.password) {
       return res
@@ -40,9 +31,10 @@ exports.create = async (req, res) => {
       provinsi: req.body.provinsi,
     });
 
-    const fotoSiswa = siswa_foto ? siswa_foto.filename : null;
-    const urlFotoSiswa = siswa_foto
-      ? `${apiConfig.BASE_URL}/siswa/${siswa_foto.filename}`
+    // Modified photo handling
+    const fotoSiswa = req.file ? req.file.filename : null;
+    const urlFotoSiswa = req.file
+      ? `${apiConfig.BASE_URL}/siswa/${req.file.filename}`
       : null;
 
     // Hapus req.body.id_alamat karena akan menggunakan id dari detail alamat yang baru dibuat

@@ -26,6 +26,8 @@ db.setting = require("./Setting.js")(sequelize, Sequelize);
 db.administrators = require("./Administrators.js")(sequelize, Sequelize);
 db.siswa = require("./Siswa.js")(sequelize, Sequelize);
 db.detailalamatsiswa = require("./detailAlamatSiswa.js")(sequelize, Sequelize);
+db.jurnal = require("./Jurnal.js")(sequelize, Sequelize);
+db.pembimbing = require("./Pembimbing.js")(sequelize, Sequelize);
 
 // **Relasi antara `Siswa` dan `DetailAlamatSiswa`**
 db.detailalamatsiswa.hasOne(db.siswa, {
@@ -38,6 +40,27 @@ db.siswa.belongsTo(db.detailalamatsiswa, {
   as: "detailAlamatSiswa",
 });
 
+// Add Jurnal relations
+db.jurnal.belongsTo(db.siswa, {
+  foreignKey: "id_siswa",
+  as: "siswa",
+});
+
+db.siswa.hasMany(db.jurnal, {
+  foreignKey: "id_siswa",
+  as: "jurnals",
+});
+
+db.jurnal.belongsTo(db.pembimbing, {
+  foreignKey: "id_pembimbing",
+  as: "pembimbing",
+});
+
+db.pembimbing.hasMany(db.jurnal, {
+  foreignKey: "id_pembimbing",
+  as: "jurnals",
+});
+
 // **Panggil method associate jika ada**
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
@@ -45,23 +68,14 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
-// siswa ke detail alamat siswa
-// db.siswa.hasOne(db.detailalamatsiswa, {
-//   foreignKey: "id_alamat",
-//   as: "detail_alamat_siswas",
-// });
-
-// db.detailalamatsiswa.hasOne(db.siswa, {
-//   foreignKey: "id_alamat",
-//   as: "siswas",
-// });
-
 // Call associate methods
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
+
+
 
 // Sinkronkan model dengan database
 sequelize
