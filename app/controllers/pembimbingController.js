@@ -142,7 +142,7 @@ exports.update = (req, res) => {
         if (pembimbing.foto_pembimbing) {
           const oldFilePath = path.join(
             __dirname,
-            "../../public/images/",
+            "../../public/images/pembimbing",
             pembimbing.foto_pembimbing
           );
           if (fs.existsSync(oldFilePath)) {
@@ -159,7 +159,7 @@ exports.update = (req, res) => {
         if (pembimbing.foto_pembimbing) {
           const oldFilePath = path.join(
             __dirname,
-            "../../public/images/",
+            "../../public/images/pembimbing",
             pembimbing.foto_pembimbing
           );
           if (fs.existsSync(oldFilePath)) {
@@ -207,7 +207,7 @@ exports.delete = (req, res) => {
       if (pembimbing.foto_pembimbing) {
         const filePath = path.join(
           __dirname,
-          "../../public/images/",
+          "../../public/images/pembimbing",
           pembimbing.foto_pembimbing
         );
         if (fs.existsSync(filePath)) {
