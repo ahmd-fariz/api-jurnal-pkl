@@ -28,6 +28,7 @@ db.siswa = require("./Siswa.js")(sequelize, Sequelize);
 db.detailalamatsiswa = require("./detailAlamatSiswa.js")(sequelize, Sequelize);
 db.jurnal = require("./Jurnal.js")(sequelize, Sequelize);
 db.pembimbing = require("./Pembimbing.js")(sequelize, Sequelize);
+db.settingalamat = require("./settingAlamat.js")(sequelize, Sequelize);
 
 // **Relasi antara `Siswa` dan `DetailAlamatSiswa`**
 db.detailalamatsiswa.hasOne(db.siswa, {
@@ -74,8 +75,6 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
-
-
 
 // Sinkronkan model dengan database
 sequelize

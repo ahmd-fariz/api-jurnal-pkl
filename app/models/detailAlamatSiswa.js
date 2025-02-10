@@ -26,19 +26,5 @@ module.exports = (sequelize, Sequelize) => {
     },
   });
 
-  // DetailAlamatSiswa.associate = (models) => {
-  //   DetailAlamatSiswa.hasOne(models.siswa, {
-  //     foreignKey: "id_alamat",
-  //     as: "siswaTerkait", // Alias harus unik
-  //   });
-  // };
-
-  // DetailAlamatSiswa.associate = (models) => {
-  //   DetailAlamatSiswa.belongsTo(models.siswa, {
-  //     foreignKey: "id_siswa",
-  //     as: "siswa",
-  //   });
-  // };
-
   return DetailAlamatSiswa;
 };

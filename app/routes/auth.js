@@ -5,6 +5,7 @@ module.exports = (app) => {
 
   router.post("/login", auth.login);
   router.post("/loginsiswa", auth.authsiswa);
+  router.post("/loginpembimbing", auth.authpembimbing);
   router.post("/logout", auth.logout);
   router.get("/cekToken", auth.cekToken);
 

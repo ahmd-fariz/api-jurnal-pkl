@@ -15,9 +15,7 @@ exports.create = async (req, res) => {
       nama_perusahaan: req.body.nama_perusahaan,
       id_pembimbing: req.body.id_pembimbing,
       pembimbing_perusahaan: req.body.pembimbing_perusahaan,
-    };
-
-    console.log("Request body:", req.body); // Tambahkan ini untuk debug
+    };                                                  
 
     // Validasi keberadaan siswa dan pembimbing
     const siswa = await Siswa.findByPk(req.body.id_siswa);
