@@ -2,9 +2,10 @@ const db = require("../models");
 const Pembimbing = db.pembimbing;
 const fs = require("fs");
 const path = require("path");
+const bcrypt = require("bcryptjs");
 
 // Create and Save a new Pembimbing
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   // Validate request
   if (!req.body.nip || !req.body.nama_pembimbing) {
     res.status(400).send({
@@ -23,12 +24,16 @@ exports.create = (req, res) => {
     }`;
   }
 
+  // Hash password securely using bcrypt
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
   // Create a Pembimbing
   const pembimbing = {
     nip: req.body.nip,
     nama_pembimbing: req.body.nama_pembimbing,
     email: req.body.email,
-    password: req.body.password,
+    password: hashedPassword,
     foto_pembimbing: foto_pembimbing,
     url_foto_pembimbing: url_foto_pembimbing,
   };
@@ -114,82 +119,83 @@ exports.findOne = async (req, res) => {
 };
 
 // Update a Pembimbing by the id
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   const id = req.params.id;
 
-  Pembimbing.findByPk(id)
-    .then((pembimbing) => {
-      if (!pembimbing) {
-        return res.status(404).send({
-          message: `Pembimbing dengan id=${id} tidak ditemukan.`,
-        });
-      }
+  try {
+    const pembimbing = await Pembimbing.findByPk(id);
 
-      let updateData = {
-        nip: req.body.nip,
-        nama_pembimbing: req.body.nama_pembimbing,
-        email: req.body.email,
-      };
-
-      // Jika ada password baru
-      if (req.body.password) {
-        updateData.password = req.body.password;
-      }
-
-      // Jika ada file foto baru
-      if (req.file) {
-        // Hapus foto lama jika ada
-        if (pembimbing.foto_pembimbing) {
-          const oldFilePath = path.join(
-            __dirname,
-            "../../public/images/pembimbing",
-            pembimbing.foto_pembimbing
-          );
-          if (fs.existsSync(oldFilePath)) {
-            fs.unlinkSync(oldFilePath);
-          }
-        }
-
-        updateData.foto_pembimbing = req.file.filename;
-        updateData.url_foto_pembimbing = `${req.protocol}://${req.get(
-          "host"
-        )}/images/${req.file.filename}`;
-      } else if (req.body.remove_foto) {
-        // Jika user ingin menghapus foto
-        if (pembimbing.foto_pembimbing) {
-          const oldFilePath = path.join(
-            __dirname,
-            "../../public/images/pembimbing",
-            pembimbing.foto_pembimbing
-          );
-          if (fs.existsSync(oldFilePath)) {
-            fs.unlinkSync(oldFilePath);
-          }
-        }
-        updateData.foto_pembimbing = null;
-        updateData.url_foto_pembimbing = null;
-      }
-
-      return Pembimbing.update(updateData, {
-        where: { id: id },
+    if (!pembimbing) {
+      return res.status(404).send({
+        message: `Pembimbing dengan id=${id} tidak ditemukan.`,
       });
-    })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "Pembimbing berhasil diupdate.",
-        });
-      } else {
-        res.send({
-          message: `Tidak dapat mengupdate Pembimbing dengan id=${id}.`,
-        });
+    }
+
+    let updateData = {
+      nip: req.body.nip,
+      nama_pembimbing: req.body.nama_pembimbing,
+      email: req.body.email,
+    };
+
+    // Jika ada password baru, hash password
+    if (req.body.password) {
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+      updateData.password = hashedPassword;
+    }
+
+    // Jika ada file foto baru
+    if (req.file) {
+      // Hapus foto lama jika ada
+      if (pembimbing.foto_pembimbing) {
+        const oldFilePath = path.join(
+          __dirname,
+          "../../public/images/pembimbing",
+          pembimbing.foto_pembimbing
+        );
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+        }
       }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error mengupdate Pembimbing dengan id=" + id,
-      });
+
+      updateData.foto_pembimbing = req.file.filename;
+      updateData.url_foto_pembimbing = `${req.protocol}://${req.get(
+        "host"
+      )}/images/${req.file.filename}`;
+    } else if (req.body.remove_foto) {
+      // Jika user ingin menghapus foto
+      if (pembimbing.foto_pembimbing) {
+        const oldFilePath = path.join(
+          __dirname,
+          "../../public/images/pembimbing",
+          pembimbing.foto_pembimbing
+        );
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+        }
+      }
+      updateData.foto_pembimbing = null;
+      updateData.url_foto_pembimbing = null;
+    }
+
+    const num = await Pembimbing.update(updateData, {
+      where: { id: id },
     });
+
+    if (num == 1) {
+      res.send({
+        message: "Pembimbing berhasil diupdate.",
+      });
+    } else {
+      res.send({
+        message: `Tidak dapat mengupdate Pembimbing dengan id=${id}.`,
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      message: "Error mengupdate Pembimbing dengan id=" + id,
+    });
+  }
 };
 
 exports.delete = (req, res) => {

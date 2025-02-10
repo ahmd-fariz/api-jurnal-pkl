@@ -3,6 +3,8 @@ const cors = require("cors");
 
 const app = express();
 app.use("/setting", express.static("public/assets/images/setting")); //masukkan public direktor
+app.use("/setting", express.static("public/assets/images/siswa")); //masukkan public direktor
+app.use("/setting", express.static("public/assets/images/pembimbing")); //masukkan public direktor
 app.use(cors());
 
 const db = require("./app/models");
@@ -38,6 +40,7 @@ require("./app/routes/administrators")(app);
 require("./app/routes/auth")(app);
 require("./app/routes/backupdb")(app);
 require("./app/routes/siswa")(app);
+require("./app/routes/pembimbing")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5000;
