@@ -43,6 +43,8 @@ require("./app/routes/siswa")(app);
 require("./app/routes/pembimbing")(app);
 require("./app/routes/jurnal")(app);
 require("./app/routes/settingAlamat")(app);
+require("./app/routes/jurusan")(app);
+require("./app/routes/kelas")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5000;

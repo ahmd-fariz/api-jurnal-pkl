@@ -1,6 +1,8 @@
 const db = require("../models");
 const Siswa = db.siswa;
 const DetailAlamat = db.detailalamatsiswa;
+const Kelas = db.kelas;
+const Jurusan = db.jurusan;
 const fs = require("fs");
 const apiConfig = require("../configs/apiConfig");
 const Op = db.Sequelize.Op; // Import bcrypt for password hashing
@@ -13,6 +15,17 @@ exports.create = async (req, res) => {
       return res
         .status(400)
         .send({ message: "Username and password are required!" });
+    }
+
+    // Validasi kelas dan jurusan exist
+    const kelas = await Kelas.findByPk(req.body.kelas);
+    if (!kelas) {
+      return res.status(400).send({ message: "Kelas tidak ditemukan!" });
+    }
+
+    const jurusan = await Jurusan.findByPk(req.body.id_jurusan);
+    if (!jurusan) {
+      return res.status(400).send({ message: "Jurusan tidak ditemukan!" });
     }
 
     // Hash password securely using bcrypt
@@ -42,9 +55,9 @@ exports.create = async (req, res) => {
       nama_lengkap: req.body.nama_lengkap,
       id_alamat: detailAlamat.id, // Otomatis menggunakan ID dari alamat yang baru dibuat
       nis: req.body.nis,
-      nisn: req.body.nisn,
+      id_siswa: req.body.id_siswa,
       kelas: req.body.kelas,
-      jurusan: req.body.jurusan,
+      id_jurusan: req.body.id_jurusan,
       email: req.body.email,
       username: req.body.username,
       password: hashedPassword,
@@ -54,7 +67,7 @@ exports.create = async (req, res) => {
 
     const newSiswa = await Siswa.create(siswa);
 
-    // Ambil data siswa beserta detail alamatnya
+    // Ambil data siswa dengan semua relasinya
     const siswaWithDetail = await Siswa.findByPk(newSiswa.id, {
       include: [
         {
@@ -72,7 +85,20 @@ exports.create = async (req, res) => {
             "provinsi",
           ],
         },
+        {
+          model: Kelas,
+          as: "kelasInfo",
+          attributes: ["id", "nama_kelas"],
+        },
+        {
+          model: Jurusan,
+          as: "jurusanInfo",
+          attributes: ["id", "nama_jurusan"],
+        },
       ],
+      attributes: {
+        exclude: ["password"],
+      },
     });
 
     res.status(201).send(siswaWithDetail);
@@ -102,9 +128,19 @@ exports.findOne = async (req, res) => {
             "provinsi",
           ],
         },
+        {
+          model: Kelas,
+          as: "kelasInfo",
+          attributes: ["id", "nama_kelas"],
+        },
+        {
+          model: Jurusan,
+          as: "jurusanInfo",
+          attributes: ["id", "nama_jurusan"],
+        },
       ],
       attributes: {
-        exclude: ["password"], // Tidak menampilkan password dalam response
+        exclude: ["password"],
       },
     });
 
@@ -126,35 +162,48 @@ exports.findOne = async (req, res) => {
 };
 
 exports.findAll = async (req, res) => {
-  Siswa.findAll({
-    include: [
-      {
-        model: DetailAlamat,
-        as: "detailAlamatSiswa",
-        attributes: [
-          "id",
-          "alamat_lengkap",
-          "kota_kabupaten",
-          "nama_jalan",
-          "rt",
-          "rw",
-          "desa",
-          "kecamatan",
-          "provinsi",
-        ],
+  try {
+    const data = await Siswa.findAll({
+      include: [
+        {
+          model: DetailAlamat,
+          as: "detailAlamatSiswa",
+          attributes: [
+            "id",
+            "alamat_lengkap",
+            "kota_kabupaten",
+            "nama_jalan",
+            "rt",
+            "rw",
+            "desa",
+            "kecamatan",
+            "provinsi",
+          ],
+        },
+        {
+          model: Kelas,
+          as: "kelasInfo",
+          attributes: ["id", "nama_kelas"],
+        },
+        {
+          model: Jurusan,
+          as: "jurusanInfo",
+          attributes: ["id", "nama_jurusan"],
+        },
+      ],
+      attributes: {
+        exclude: ["password"],
       },
-    ],
-  })
-    .then((data) => {
-      res.status(200).send({
-        data: data,
-      });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Terjadi kesalahan saat mengambil Paket.",
-      });
     });
+
+    res.status(200).send({
+      data: data,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Terjadi kesalahan saat mengambil data siswa.",
+    });
+  }
 };
 
 exports.update = async (req, res) => {

@@ -3,6 +3,9 @@ module.exports = (sequelize, Sequelize) => {
     nama_kelas: {
       type: Sequelize.STRING,
     },
+    wali_kelas: {
+      type: Sequelize.STRING,
+    },
   });
 
   return Kelas;
