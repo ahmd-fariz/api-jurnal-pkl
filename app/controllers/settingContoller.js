@@ -6,28 +6,19 @@ const apiConfig = require("../configs/apiConfig");
 
 exports.create = async (req, res) => {
   try {
-    const { foto, foto_cap, foto_ttd } = req.files;
+    const { foto } = req.files;
 
     const setting = {
       setting_warna: req.body.setting_warna,
       wa: req.body.wa,
       telp: req.body.telp,
       email: req.body.email,
-      profil_perusahaan: req.body.profil_perusahaan,
+      nama_sekolah: req.body.nama_sekolah,
       alamat: req.body.alamat,
       url_gmaps: req.body.url_gmaps,
-      bidang_perusahaan: req.body.bidang_perusahaan,
       foto: foto ? foto[0].filename : null,
       gambar_setting: foto
         ? `${apiConfig.BASE_URL}/setting/${foto[0].filename}`
-        : null,
-      foto_cap: foto_cap ? foto_cap[0].filename : null,
-      url_foto_cap: foto_cap
-        ? `${apiConfig.BASE_URL}/setting/${foto_cap[0].filename}`
-        : null,
-      foto_ttd: foto_ttd ? foto_ttd[0].filename : null,
-      url_foto_ttd: foto_ttd
-        ? `${apiConfig.BASE_URL}/setting/${foto_ttd[0].filename}`
         : null,
     };
 
@@ -111,7 +102,7 @@ exports.update = async (req, res) => {
         .send({ message: `Setting dengan id=${id} tidak ditemukan.` });
     }
 
-    const { foto, foto_cap, foto_ttd } = req.files;
+    const { foto  } = req.files;
 
     // Fungsi untuk menghapus file lama
     const deleteOldFile = (oldFilename) => {
@@ -133,31 +124,15 @@ exports.update = async (req, res) => {
       setting.gambar_setting = `${apiConfig.BASE_URL}/setting/${foto[0].filename}`;
     }
 
-    // Update foto_cap
-    if (foto_cap) {
-      deleteOldFile(setting.foto_cap);
-      setting.foto_cap = foto_cap[0].filename;
-      setting.url_foto_cap = `${apiConfig.BASE_URL}/setting/${foto_cap[0].filename}`;
-    }
-
-    // Update foto_ttd
-    if (foto_ttd) {
-      deleteOldFile(setting.foto_ttd);
-      setting.foto_ttd = foto_ttd[0].filename;
-      setting.url_foto_ttd = `${apiConfig.BASE_URL}/setting/${foto_ttd[0].filename}`;
-    }
-
     // Update field lainnya
     setting.setting_warna = req.body.setting_warna || setting.setting_warna;
     setting.wa = req.body.wa || setting.wa;
     setting.telp = req.body.telp || setting.telp;
     setting.email = req.body.email || setting.email;
-    setting.profil_perusahaan =
-      req.body.profil_perusahaan || setting.profil_perusahaan;
+    setting.nama_perusahaan =
+      req.body.nama_perusahaan || setting.nama_perusahaan;
     setting.alamat = req.body.alamat || setting.alamat;
     setting.url_gmaps = req.body.url_gmaps || setting.url_gmaps;
-    setting.bidang_perusahaan =
-      req.body.bidang_perusahaan || setting.bidang_perusahaan;
 
     await setting.save();
     res.send({ message: "Setting berhasil diperbarui.", data: setting });

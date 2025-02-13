@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
     email: {
       type: Sequelize.STRING,
     },
-    profil_perusahaan: {
+    nama_sekolah: {
       type: Sequelize.TEXT,
     },
     alamat: {
@@ -25,22 +25,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     gambar_setting: {
-      type: Sequelize.STRING,
-    },
-    foto_cap: {
-      type: Sequelize.STRING,
-    },
-    url_foto_cap: {
-      type: Sequelize.STRING,
-    },
-    bidang_perusahaan: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    foto_ttd: {
-      type: Sequelize.STRING,
-    },
-    url_foto_ttd: {
       type: Sequelize.STRING,
     },
   });
