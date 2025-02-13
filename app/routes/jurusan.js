@@ -8,6 +8,6 @@ module.exports = (app) => {
     router.patch("/:id", jurusan.update);
     router.delete("/:id", jurusan.delete);
   
-    app.use("/api/jurnal", router);
+    app.use("/api/jurusan", router);
   };
   

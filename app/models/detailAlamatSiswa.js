@@ -6,6 +6,12 @@ module.exports = (sequelize, Sequelize) => {
     kota_kabupaten: {
       type: Sequelize.STRING,
     },
+    dusun: {
+      type: Sequelize.STRING,
+    },
+    kelurahan: {
+      type: Sequelize.STRING,
+    },
     kecamatan: {
       type: Sequelize.STRING,
     },

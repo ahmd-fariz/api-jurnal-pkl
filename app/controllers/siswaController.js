@@ -18,7 +18,7 @@ exports.create = async (req, res) => {
     }
 
     // Validasi kelas dan jurusan exist
-    const kelas = await Kelas.findByPk(req.body.kelas);
+    const kelas = await Kelas.findByPk(req.body.id_kelas);
     if (!kelas) {
       return res.status(400).send({ message: "Kelas tidak ditemukan!" });
     }
@@ -40,6 +40,8 @@ exports.create = async (req, res) => {
       kota_kabupaten: req.body.kota_kabupaten,
       nama_jalan: req.body.nama_jalan,
       alamat_lengkap: req.body.alamat_lengkap,
+      dusun: req.body.dusun,
+      kelurahan: req.body.kelurahan,
       kecamatan: req.body.kecamatan,
       provinsi: req.body.provinsi,
     });
@@ -55,8 +57,7 @@ exports.create = async (req, res) => {
       nama_lengkap: req.body.nama_lengkap,
       id_alamat: detailAlamat.id, // Otomatis menggunakan ID dari alamat yang baru dibuat
       nis: req.body.nis,
-      id_siswa: req.body.id_siswa,
-      kelas: req.body.kelas,
+      id_kelas: req.body.id_kelas,
       id_jurusan: req.body.id_jurusan,
       email: req.body.email,
       username: req.body.username,
@@ -81,6 +82,8 @@ exports.create = async (req, res) => {
             "rt",
             "rw",
             "desa",
+            "dusun",
+            "kelurahan",
             "kecamatan",
             "provinsi",
           ],
@@ -124,6 +127,8 @@ exports.findOne = async (req, res) => {
             "rt",
             "rw",
             "desa",
+            "dusun",
+            "kelurahan",
             "kecamatan",
             "provinsi",
           ],
@@ -176,6 +181,8 @@ exports.findAll = async (req, res) => {
             "rt",
             "rw",
             "desa",
+            "dusun",
+            "kelurahan",
             "kecamatan",
             "provinsi",
           ],
@@ -249,6 +256,8 @@ exports.update = async (req, res) => {
           kota_kabupaten: req.body.kota_kabupaten,
           nama_jalan: req.body.nama_jalan,
           alamat_lengkap: req.body.alamat_lengkap,
+          dusun: req.body.dusun,
+          kelurahan: req.body.kelurahan,
           kecamatan: req.body.kecamatan,
           provinsi: req.body.provinsi,
         },
@@ -277,6 +286,8 @@ exports.update = async (req, res) => {
             "rt",
             "rw",
             "desa",
+            "dusun",
+            "kelurahan",
             "kecamatan",
             "provinsi",
           ],

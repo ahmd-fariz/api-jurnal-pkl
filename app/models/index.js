@@ -67,7 +67,7 @@ db.pembimbing.hasMany(db.jurnal, {
 // Relasi untuk Kelas dan Jurusan
 db.siswa.belongsTo(db.kelas, {
   foreignKey: "id_kelas",
-  as: "kelas",
+  as: "kelasInfo",
 });
 
 db.kelas.hasMany(db.siswa, {
@@ -77,7 +77,7 @@ db.kelas.hasMany(db.siswa, {
 
 db.siswa.belongsTo(db.jurusan, {
   foreignKey: "id_jurusan",
-  as: "jurusan",
+  as: "jurusanInfo",
 });
 
 db.jurusan.hasMany(db.siswa, {
