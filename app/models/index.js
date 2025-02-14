@@ -31,6 +31,7 @@ db.pembimbing = require("./Pembimbing.js")(sequelize, Sequelize);
 db.settingalamat = require("./settingAlamat.js")(sequelize, Sequelize);
 db.jurusan = require("./Jurusan.js")(sequelize, Sequelize);
 db.kelas = require("./Kelas.js")(sequelize, Sequelize);
+db.perusahaan = require("./Perusahaan.js")(sequelize, Sequelize);
 
 // **Relasi antara `Siswa` dan `DetailAlamatSiswa`**
 db.detailalamatsiswa.hasOne(db.siswa, {
@@ -61,6 +62,17 @@ db.jurnal.belongsTo(db.pembimbing, {
 
 db.pembimbing.hasMany(db.jurnal, {
   foreignKey: "id_pembimbing",
+  as: "jurnals",
+});
+
+// Tambah relasi Jurnal dengan Perusahaan
+db.jurnal.belongsTo(db.perusahaan, {
+  foreignKey: "id_perusahaan",
+  as: "perusahaan",
+});
+
+db.perusahaan.hasMany(db.jurnal, {
+  foreignKey: "id_perusahaan",
   as: "jurnals",
 });
 

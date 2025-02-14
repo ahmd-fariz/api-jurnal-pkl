@@ -2,6 +2,7 @@ const db = require("../models");
 const Jurnal = db.jurnal;
 const Siswa = db.siswa;
 const Pembimbing = db.pembimbing;
+const Perusahaan = db.perusahaan;
 const DetailAlamatSiswa = db.detailalamatsiswa;
 
 // Create
@@ -14,14 +15,16 @@ exports.create = async (req, res) => {
       id_siswa: req.body.id_siswa,
       nama_perusahaan: req.body.nama_perusahaan,
       id_pembimbing: req.body.id_pembimbing,
+      id_perusahaan: req.body.id_perusahaan,
       pembimbing_perusahaan: req.body.pembimbing_perusahaan,
-    };                                                  
+    };
 
     // Validasi keberadaan siswa dan pembimbing
     const siswa = await Siswa.findByPk(req.body.id_siswa);
     const pembimbing = await Pembimbing.findByPk(req.body.id_pembimbing);
+    const perusahaan = await Perusahaan.findByPk(req.body.id_perusahaan);
 
-    if (!siswa || !pembimbing) {
+    if (!siswa || !pembimbing || !perusahaan) {
       return res.status(400).send({
         message: "ID Siswa atau ID Pembimbing tidak valid!",
       });
@@ -58,6 +61,10 @@ exports.findAll = async (req, res) => {
           model: Pembimbing,
           as: "pembimbing",
         },
+        {
+          model: Perusahaan,
+          as: "perusahaan",
+        },
       ],
     });
     res.send(data);
@@ -88,6 +95,10 @@ exports.findOne = async (req, res) => {
         {
           model: Pembimbing,
           as: "pembimbing",
+        },
+        {
+          model: Perusahaan,
+          as: "perusahaan",
         },
       ],
     });
@@ -124,6 +135,15 @@ exports.update = async (req, res) => {
     if (req.body.id_pembimbing) {
       const pembimbing = await Pembimbing.findByPk(req.body.id_pembimbing);
       if (!pembimbing) {
+        return res.status(400).send({
+          message: "ID Pembimbing tidak valid!",
+        });
+      }
+    }
+
+    if (req.body.id_perusahaan) {
+      const perusahaan = await Perusahaan.findByPk(req.body.id_perusahaan);
+      if (!perusahaan) {
         return res.status(400).send({
           message: "ID Pembimbing tidak valid!",
         });
