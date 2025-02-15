@@ -32,6 +32,7 @@ db.settingalamat = require("./settingAlamat.js")(sequelize, Sequelize);
 db.jurusan = require("./Jurusan.js")(sequelize, Sequelize);
 db.kelas = require("./Kelas.js")(sequelize, Sequelize);
 db.perusahaan = require("./Perusahaan.js")(sequelize, Sequelize);
+db.kompetensi = require("./kompetensi.js")(sequelize, Sequelize);
 
 // **Relasi antara `Siswa` dan `DetailAlamatSiswa`**
 db.detailalamatsiswa.hasOne(db.siswa, {
@@ -95,6 +96,17 @@ db.siswa.belongsTo(db.jurusan, {
 db.jurusan.hasMany(db.siswa, {
   foreignKey: "id_jurusan",
   as: "siswa",
+});
+
+// Relasi antara Kompetensi dan Jurusan
+db.kompetensi.belongsTo(db.jurusan, {
+  foreignKey: "id_jurusan",
+  as: "jurusan",
+});
+
+db.jurusan.hasMany(db.kompetensi, {
+  foreignKey: "id_jurusan",
+  as: "kompetensi",
 });
 
 // **Panggil method associate jika ada**
