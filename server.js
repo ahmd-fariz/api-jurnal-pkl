@@ -46,6 +46,7 @@ require("./app/routes/settingAlamat")(app);
 require("./app/routes/jurusan")(app);
 require("./app/routes/kelas")(app);
 require("./app/routes/perusahaan")(app);
+require("./app/routes/settingPembimbingJurusan")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5000;
