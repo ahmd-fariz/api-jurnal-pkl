@@ -12,7 +12,7 @@ module.exports = (app) => {
   router.get("/:id", settingAlamat.findOne);
 
   // Update a SettingAlamat with id
-  router.put("/:id", settingAlamat.update);
+  router.patch("/:id", settingAlamat.update);
 
   // Delete a SettingAlamat with id
   router.delete("/:id", settingAlamat.delete);

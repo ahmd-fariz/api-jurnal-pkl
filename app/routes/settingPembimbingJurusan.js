@@ -12,7 +12,7 @@ module.exports = (app) => {
     router.get("/:id", SettingPembimbingJurusan.findOne);
   
     // Update a SettingPembimbingJurusan with id
-    router.put("/:id", SettingPembimbingJurusan.update);
+    router.patch("/:id", SettingPembimbingJurusan.update);
   
     // Delete a SettingPembimbingJurusan with id
     router.delete("/:id", SettingPembimbingJurusan.delete);
