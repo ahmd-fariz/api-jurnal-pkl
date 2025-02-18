@@ -1,5 +1,7 @@
 const db = require("../models");
 const SettingPembimbingJurusan = db.settingpembimbingjurusan;
+const Jurusan = db.jurusan;
+const Pembimbing = db.pembimbing
 
 // Create
 exports.create = async (req, res) => {
@@ -8,6 +10,15 @@ exports.create = async (req, res) => {
       id_jurusan: req.body.id_jurusan,
       id_pembimbing: req.body.id_pembimbing,
     });
+
+    const pembimbing = await Pembimbing.findByPk(req.body.id_pembimbing);
+    const jurusan = await Jurusan.findByPk(req.body.id_jurusan);
+
+    if (!jurusan || !pembimbing) {
+        return res.status(400).send({
+          message: "ID Jurusan atau ID Pembimbing tidak valid!",
+        });
+      }
 
     res.status(201).json({
       status: "success",
