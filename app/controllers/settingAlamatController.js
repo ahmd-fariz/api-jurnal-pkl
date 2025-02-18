@@ -16,6 +16,8 @@ exports.create = (req, res) => {
     provinsi: req.body.provinsi,
     kota_kabupaten: req.body.kota_kabupaten,
     kecamatan: req.body.kecamatan,
+    dusun: req.body.dusun,
+    kelurahan: req.body.kelurahan,
     desa: req.body.desa,
     nama_jalan: req.body.nama_jalan,
     rt: req.body.rt,

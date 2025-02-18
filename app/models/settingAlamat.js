@@ -12,6 +12,12 @@ module.exports = (sequelize, Sequelize) => {
       desa: {
         type: Sequelize.STRING,
       },
+      dusun: {
+        type: Sequelize.STRING,
+      },
+      kelurahan: {
+        type: Sequelize.STRING,
+      },
       nama_jalan: {
         type: Sequelize.STRING,
       },
