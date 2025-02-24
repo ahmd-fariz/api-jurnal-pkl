@@ -150,7 +150,7 @@ exports.update = async (req, res) => {
       if (pembimbing.foto_pembimbing) {
         const oldFilePath = path.join(
           __dirname,
-          "../../public/images/pembimbing",
+          "../../public/assets/images/pembimbing",
           pembimbing.foto_pembimbing
         );
         if (fs.existsSync(oldFilePath)) {
