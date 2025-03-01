@@ -89,33 +89,6 @@ exports.cekToken = async (req, res) => {
   }
 };
 
-exports.authsiswa = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Cari administrator berdasarkan email
-    const siswa = await Siswa.findOne({
-      where: { email: email },
-    });
-
-    // Jika administrator tidak ditemukan atau password salah, kirim respons error
-    if (!siswa || !(await bcrypt.compare(password, siswa.password))) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
-
-    // Buat token JWT
-    const token = jwt.sign({ id: siswa.id }, JWT_SECRET, {
-      // Menggunakan JWT_SECRET sebagai kunci rahasia
-      expiresIn: "1h",
-    });
-
-    // Kirim token sebagai respons
-    res.json({ token });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
 
 exports.authpembimbing = async (req, res) => {
   try {

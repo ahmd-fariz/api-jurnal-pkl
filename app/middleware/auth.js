@@ -4,6 +4,7 @@ const { JWT_SECRET } = require("../configs/database"); // Mengimpor JWT_SECRET d
 const authMiddleware = (req, res, next) => {
   // Dapatkan token dari header Authorization
   const token = req.header("Authorization");
+  console.log({ token, JWT_SECRET }, req.header);
 
   // Periksa jika token tidak ada
   if (!token) {
@@ -28,8 +29,12 @@ const authMiddleware = (req, res, next) => {
 };
 
 const verifyToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.header("Authorization");
   const token = authHeader && authHeader.split(" ")[1];
+
+  console.log("woylah", { authHeader, token });
+
+  console.log("Token diterima:", token); // Cek token yang dikirim
 
   // return res.status(403).json({ message: "masuk" });
   if (!token) {
@@ -46,17 +51,5 @@ const verifyToken = (req, res, next) => {
   });
 };
 
-// const verifyToken = (req, res, next) => {
-//   const token = req.headers["authorization"];
-//   if (!token) return res.status(403).json({ message: "Token not provided" });
 
-//   try {
-//     const bearerToken = token.split(" ")[1];
-//     const decoded = jwt.verify(bearerToken, process.env.JWT_SECRET);
-//     req.pelangganId = decoded.id; // Simpan PelangganId ke req untuk digunakan di endpoint
-//     next();
-//   } catch (err) {
-//     return res.status(401).json({ message: "Invalid token" });
-//   }
-// };
 (module.exports = authMiddleware), verifyToken;
