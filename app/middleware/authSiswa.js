@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../configs/database"); // Mengimpor JWT_SECRET dari file konfigurasi
+require("dotenv").config()
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const authMiddleware = (req, res, next) => {
   // Dapatkan token dari header Authorization
@@ -14,7 +15,7 @@ const authMiddleware = (req, res, next) => {
 
   try {
     // Verifikasi token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     // Tambahkan user ke request untuk digunakan di endpoint terproteksi
     req.user = decoded;
@@ -28,23 +29,25 @@ const authMiddleware = (req, res, next) => {
 };
 
 const verifyToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-
-  // return res.status(403).json({ message: "masuk" });
-  if (!token) {
-    return res.status(401).json({ message: "Token required" });
+  const authHeader = req.header("Authorization");
+  
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized, token missing" });
   }
+
+  // Ambil token setelah "Bearer "
+  const token = authHeader.split(" ")[1];
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: "Token is not valid" });
     }
 
-    req.user = decoded; // Simpan data user dari token ke req.user
+    req.user = decoded; // Simpan user dari token
     next();
   });
 };
+
 
 // const verifyToken = (req, res, next) => {
 //   const token = req.headers["authorization"];

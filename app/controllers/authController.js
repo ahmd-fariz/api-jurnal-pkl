@@ -4,7 +4,8 @@ const db = require("../models");
 const Administrators = db.administrators; // Menggunakan model Administrators
 const Siswa = db.siswa;
 const Pembimbing = db.pembimbing;
-const { JWT_SECRET } = require("../configs/database"); // Mengimpor nilai JWT_SECRET dari file konfigurasi
+require("dotenv").config()
+const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.login = async (req, res) => {
   try {
