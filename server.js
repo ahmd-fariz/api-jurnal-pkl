@@ -48,6 +48,7 @@ require("./app/routes/kelas")(app);
 require("./app/routes/perusahaan")(app);
 require("./app/routes/settingPembimbingJurusan")(app);
 require("./app/routes/authSiswa")(app);
+require("./app/routes/authPembimbing")(app);
 
 console.log("JWT_SECRET di backend:", process.env.JWT_SECRET);
 
