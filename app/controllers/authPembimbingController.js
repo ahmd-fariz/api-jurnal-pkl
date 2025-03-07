@@ -21,10 +21,9 @@ exports.authpembimbing = async(req, res) => {
         }
 
         // Buat token JWT
-        const token = jwt.sign({ id_pembimbing: pembimbing.id }, // Ubah key dari "id" menjadi "id_pembimbing"
-            JWT_SECRET, { expiresIn: "1h" }
-        );
-
+        const token = jwt.sign({ id: pembimbing.id }, JWT_SECRET, {
+            expiresIn: "1h",
+        });
 
         res.json({ token });
     } catch (error) {
