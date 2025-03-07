@@ -50,9 +50,6 @@ require("./app/routes/settingPembimbingJurusan")(app);
 require("./app/routes/authSiswa")(app);
 require("./app/routes/authPembimbing")(app);
 
-console.log("JWT_SECRET di backend:", process.env.JWT_SECRET);
-
-
 // set port, listen for requests
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

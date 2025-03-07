@@ -3,7 +3,8 @@ const Jurnal = db.jurnal;
 const Siswa = db.siswa;
 const Pembimbing = db.pembimbing;
 const Perusahaan = db.perusahaan;
-const DetailAlamatSiswa = db.detailalamatsiswa;
+const Jurusan = db.jurusan;
+const Kelas = db.kelas;
 
 // Create
 exports.create = async (req, res) => {
@@ -50,20 +51,45 @@ exports.findAll = async (req, res) => {
         {
           model: Siswa,
           as: "siswa",
+          attributes: [
+            "id",
+            "nama_lengkap",
+            "nis",
+            "nisn",
+            "id_jurusan",
+            "id_kelas",
+            "email",
+          ],
           include: [
             {
-              model: DetailAlamatSiswa,
-              as: "detailAlamatSiswa",
+              model: Jurusan,
+              as: "jurusanInfo",
+              attributes: ["nama_jurusan", "deskripsi_jurusan"],
+            },
+          ],
+          include: [
+            {
+              model: Kelas,
+              as: "kelasInfo",
+              attributes: ["nama_kelas"],
             },
           ],
         },
         {
           model: Pembimbing,
           as: "pembimbing",
+          attributes: ["id", "nama_pembimbing", "email"],
         },
         {
           model: Perusahaan,
           as: "perusahaan",
+          attributes: [
+            "id",
+            "nama_perusahaan",
+            "bidang_perusahaan",
+            "alamat_perusahaan",
+            "pembimbing_perusahaan",
+          ],
         },
       ],
     });
@@ -85,20 +111,45 @@ exports.findOne = async (req, res) => {
         {
           model: Siswa,
           as: "siswa",
+          attributes: [
+            "id",
+            "nama_lengkap",
+            "nis",
+            "nisn",
+            "id_jurusan",
+            "id_kelas",
+            "email",
+          ],
           include: [
             {
-              model: DetailAlamatSiswa,
-              as: "detailAlamatSiswa",
+              model: Jurusan,
+              as: "jurusanInfo",
+              attributes: ["nama_jurusan", "deskripsi_jurusan"],
+            },
+          ],
+          include: [
+            {
+              model: Kelas,
+              as: "kelasInfo",
+              attributes: ["nama_kelas"],
             },
           ],
         },
         {
           model: Pembimbing,
           as: "pembimbing",
+          attributes: ["id", "nama_pembimbing", "email"],
         },
         {
           model: Perusahaan,
           as: "perusahaan",
+          attributes: [
+            "id",
+            "nama_perusahaan",
+            "bidang_perusahaan",
+            "alamat_perusahaan",
+            "pembimbing_perusahaan",
+          ],
         },
       ],
     });
@@ -161,16 +212,45 @@ exports.update = async (req, res) => {
           {
             model: Siswa,
             as: "siswa",
+            attributes: [
+              "id",
+              "nama_lengkap",
+              "nis",
+              "nisn",
+              "id_jurusan",
+              "id_kelas",
+              "email",
+            ],
             include: [
               {
-                model: DetailAlamatSiswa,
-                as: "detailAlamatSiswa",
+                model: Jurusan,
+                as: "jurusanInfo",
+                attributes: ["nama_jurusan", "deskripsi_jurusan"],
+              },
+            ],
+            include: [
+              {
+                model: Kelas,
+                as: "kelasInfo",
+                attributes: ["nama_kelas"],
               },
             ],
           },
           {
             model: Pembimbing,
             as: "pembimbing",
+            attributes: ["id", "nama_pembimbing", "email"],
+          },
+          {
+            model: Perusahaan,
+            as: "perusahaan",
+            attributes: [
+              "id",
+              "nama_perusahaan",
+              "bidang_perusahaan",
+              "alamat_perusahaan",
+              "pembimbing_perusahaan",
+            ],
           },
         ],
       });
