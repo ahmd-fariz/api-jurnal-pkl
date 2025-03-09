@@ -62,16 +62,14 @@ exports.findAll = async (req, res) => {
           ],
           include: [
             {
-              model: Jurusan,
-              as: "jurusanInfo",
-              attributes: ["nama_jurusan", "deskripsi_jurusan"],
-            },
-          ],
-          include: [
-            {
               model: Kelas,
               as: "kelasInfo",
               attributes: ["nama_kelas"],
+            },
+            {
+              model: Jurusan,
+              as: "jurusanInfo",
+              attributes: ["nama_jurusan", "deskripsi_jurusan"],
             },
           ],
         },
