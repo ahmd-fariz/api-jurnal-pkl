@@ -35,12 +35,27 @@ exports.authsiswa = async (req, res) => {
   }
 };
 
-// Fungsi logout (Token dihapus di frontend)
+// Fungsi logout
 exports.logout = (req, res) => {
   try {
+    // Dapatkan token dari header Authorization
+    const token = req.header("Authorization");
+
+    // Periksa jika token tidak ada
+    if (!token) {
+      return res.status(401).json({ message: "Missing token, logout failed" });
+    }
+
+    // Verifikasi token dan ambil ID pengguna dari token
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.id;
+
+    // Hapus token dari sisi klien (misalnya, dengan menghapus token dari local storage)
+
+    // Kirim respons logout berhasil
     res.json({ message: "Logout successful" });
   } catch (error) {
-    console.error("Logout error:", error);
+    console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
