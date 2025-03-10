@@ -79,16 +79,16 @@ exports.cekToken = async (req, res) => {
     }
 
     // Cari siswa berdasarkan ID dengan include
-    const pembimbing = await Pembimbing.findOne({
+    const admin = await db.administrators.findOne({
       where: { id: decoded.id },
       attributes: { exclude: ["password"] },
     });
 
-    if (!pembimbing) {
-      return res.status(404).json({ message: "pembimbing not found" });
+    if (!admin) {
+      return res.status(404).json({ message: "admin not found" });
     }
 
-    res.json({ data: pembimbing });
+    res.json({ data: admin });
   } catch (error) {
     console.error("Error fetching user data:", error);
     res.status(500).json({ message: "Internal server error" });
