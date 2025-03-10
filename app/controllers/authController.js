@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../models");
 const Administrators = db.administrators; // Menggunakan model Administrators
-require("dotenv").config()
+require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.login = async (req, res) => {
@@ -63,28 +63,35 @@ exports.logout = (req, res) => {
 
 exports.cekToken = async (req, res) => {
   try {
-    // Dapatkan token dari header Authorization
-    const token = req.header("Authorization");
+    const authHeader = req.header("Authorization");
 
-    if (!token) {
-      return res.status(401).json({ message: "Missing token, logout failed" });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Invalid token format" });
     }
 
-    // decode JWT untuk mendapatkan id dari user
-    decodeJWTAndGetID(token)
-      .then(async (id) => {
-        const administrator = await Administrators.findOne({
-          where: { id: id },
-        });
+    const token = authHeader.split(" ")[1];
 
-        res.json({ role: administrator.role });
-      })
-      .catch((err) => {
-        res.status(500).json({ message: `Gagal mendeskripsi JWT:`, err });
-      });
+    // Decode token dan ambil ID siswa
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    if (!decoded || !decoded.id) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    // Cari siswa berdasarkan ID dengan include
+    const pembimbing = await Pembimbing.findOne({
+      where: { id: decoded.id },
+      attributes: { exclude: ["password"] },
+    });
+
+    if (!pembimbing) {
+      return res.status(404).json({ message: "pembimbing not found" });
+    }
+
+    res.json({ data: pembimbing });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: `Internal server error ${error}` });
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
