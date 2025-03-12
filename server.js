@@ -3,8 +3,8 @@ const cors = require("cors");
 
 const app = express();
 app.use("/setting", express.static("public/assets/images/setting")); //masukkan public direktor
-app.use("/setting", express.static("public/assets/images/siswa")); //masukkan public direktor
-app.use("/setting", express.static("public/assets/images/pembimbing")); //masukkan public direktor
+app.use("/siswa", express.static("public/assets/images/siswa")); //masukkan public direktor
+app.use("/pembimbing", express.static("public/assets/images/pembimbing")); //masukkan public direktor
 app.use(cors());
 
 const db = require("./app/models");

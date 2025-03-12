@@ -109,6 +109,23 @@ exports.create = async(req, res) => {
     }
 };
 
+exports.createExcel = async(req, res) => {
+    const siswaData = req.body;
+
+    if (!Array.isArray(siswaData)) {
+      return res.status(400).json({ message: "Format data tidak valid" });
+    }
+  
+    for (const siswa of siswaData) {
+      if (!siswa.nama_siswa || !siswa.email || !siswa.password) {
+        return res.status(400).json({ message: "Data siswa tidak lengkap" });
+      }
+    }
+
+     // Proses insert ke database...
+  res.json({ message: "Data siswa berhasil disimpan" });
+}
+
 exports.findOne = async(req, res) => {
     try {
         const id = req.params.id;
