@@ -49,7 +49,7 @@ exports.create = async(req, res) => {
         // Modified photo handling
         const fotoSiswa = req.file ? req.file.filename : null;
         const urlFotoSiswa = req.file ?
-            `${apiConfig.BASE_URL}/siswa/${req.file.filename}` :
+            `${apiConfig.BASE_URL}/fotosiswa/${req.file.filename}` :
             null;
 
         // Hapus req.body.id_alamat karena akan menggunakan id dari detail alamat yang baru dibuat
