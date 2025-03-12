@@ -250,7 +250,7 @@ exports.update = async(req, res) => {
         if (req.file) {
             // Hapus foto lama jika ada
             if (existingSiswa.foto_siswa) {
-                const oldPhotoPath = `./public/siswa/${existingSiswa.foto_siswa}`;
+                const oldPhotoPath = `./public/images/siswa/${existingSiswa.foto_siswa}`;
                 if (fs.existsSync(oldPhotoPath)) {
                     fs.unlinkSync(oldPhotoPath);
                 }

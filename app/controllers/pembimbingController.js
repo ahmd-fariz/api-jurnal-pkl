@@ -19,7 +19,7 @@ exports.create = async (req, res) => {
 
   if (req.file) {
     foto_pembimbing = req.file.filename;
-    url_foto_pembimbing = `${req.protocol}://${req.get("host")}/images/${
+    url_foto_pembimbing = `${req.protocol}://${req.get("host")}/pembimbing/${
       req.file.filename
     }`;
   }
@@ -161,7 +161,7 @@ exports.update = async (req, res) => {
       updateData.foto_pembimbing = req.file.filename;
       updateData.url_foto_pembimbing = `${req.protocol}://${req.get(
         "host"
-      )}/images/${req.file.filename}`;
+      )}/pembimbing/${req.file.filename}`;
     } else if (req.body.remove_foto) {
       // Jika user ingin menghapus foto
       if (pembimbing.foto_pembimbing) {
