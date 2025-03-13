@@ -3,6 +3,7 @@ const Pembimbing = db.pembimbing;
 const fs = require("fs");
 const path = require("path");
 const bcrypt = require("bcryptjs");
+const apiConfig = require("../configs/apiConfig");
 
 // Create and Save a new Pembimbing
 exports.create = async (req, res) => {
@@ -131,55 +132,76 @@ exports.update = async (req, res) => {
       });
     }
 
-    // let updateData = {
-    //   nip: req.body.nip,
-    //   nama_pembimbing: req.body.nama_pembimbing,
-    //   email: req.body.email,
-    // };
+    // Periksa apakah ada file yang diupload
+    if (!req.file) {
+      // Update data tanpa foto
+      await pembimbing.update({
+        nama_pembimbing: req.body.nama_pembimbing || pembimbing.nama_pembimbing,
+        nip: req.body.nip || pembimbing.nip,
+        email: req.body.email || pembimbing.email,
+      });
 
-    const { foto } = req.file;
+      return res.send({
+        message: "Pembimbing berhasil diperbarui.",
+        data: pembimbing,
+      });
+    }
 
-    // Fungsi untuk menghapus file lama
+    // Jika ada file foto baru
     const deleteOldFile = (oldFilename) => {
       if (oldFilename) {
         const oldFilePath = path.join(
           __dirname,
-          `../../public/assets/images/pembimbing/${oldFilename}`
+          "..",
+          "..",
+          "public",
+          "pembimbing",
+          oldFilename
         );
-        fs.unlink(oldFilePath, (err) => {
-          if (err) console.error("Gagal menghapus file lama:", err);
+        return new Promise((resolve, reject) => {
+          if (fs.existsSync(oldFilePath)) {
+            fs.unlink(oldFilePath, (err) => {
+              if (err) {
+                console.error("Gagal menghapus file lama:", err);
+                reject(err);
+              }
+              resolve();
+            });
+          } else {
+            // Jika file tidak ditemukan, lanjutkan saja
+            resolve();
+          }
         });
       }
+      return Promise.resolve();
     };
 
-    // Update foto
-    if (foto) {
-      deleteOldFile(pembimbing.foto_pembimbing);
-      pembimbing.foto_pembimbing = foto[0].filename;
-      pembimbing.url_foto_pembimbing = `${apiConfig.BASE_URL}/pembimbing/${foto[0].filename}`;
+    // Hapus foto lama dan update dengan yang baru
+    await deleteOldFile(pembimbing.foto_pembimbing);
 
-      setting.nama_pembimbing =
-        req.body.nama_pembimbing || pembimbing.nama_pembimbing;
-      setting.nip = req.body.nip || pembimbing.nip;
-      setting.email = req.body.email || pembimbing.email;
+    // Pastikan nama file dan URL diambil dengan benar
+    const newFilename = req.file.filename;
+    const newFileUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/pembimbing/${newFilename}`;
 
-      await pembimbing.save();
-      res.send({
-        message: "Pembimbing berhasil diperbarui.",
-        data: pembimbing,
-      });
+    await pembimbing.update({
+      foto_pembimbing: newFilename,
+      url_foto_pembimbing: newFileUrl,
+      nama_pembimbing: req.body.nama_pembimbing || pembimbing.nama_pembimbing,
+      nip: req.body.nip || pembimbing.nip,
+      email: req.body.email || pembimbing.email,
+    });
 
-      // const num = await Pembimbing.update(updateData, {
-      //   where: { id: id },
-      // });
-    } else {
-      res.send({
-        message: `Tidak dapat mengupdate Pembimbing dengan id=${id}.`,
-      });
-    }
+    res.send({
+      message: "Pembimbing berhasil diperbarui.",
+      data: pembimbing,
+    });
   } catch (err) {
+    console.error("Error updating pembimbing:", err);
     res.status(500).send({
       message: "Error mengupdate Pembimbing dengan id=" + id,
+      error: err.message,
     });
   }
 };
